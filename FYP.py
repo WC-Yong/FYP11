@@ -540,6 +540,9 @@ def load_model(img):
     #im_pil = Image.fromarray(img)
     image = image_transform(image).float()
     image = image.unsqueeze(0)
+    opencvImage = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    resized = cv2.resize(opencvImage, (256,256), interpolation = cv2.INTER_AREA)
+    image = cv2.cvtColor(resized, cv2.COLOR_RGB2BGR)
     
     output = model(image)
     _, predicted = torch.max(output.data, 1)
@@ -580,11 +583,11 @@ def main():
     st.markdown("<h1 style='text-align: center; color: GreenYellow;'>Plant Disease Recognition App</h1>", unsafe_allow_html=True)
     
     # Image File Upload
-    file = st.file_uploader("Upload file", type=["png", "jpg"])
+    file = st.file_uploader("Upload file", type=["png", "jpg", "jpeg"])
     show_file = st.empty()
  
     if not file:
-        show_file.info("Please upload a file of type: " + ", ".join(["png", "jpg"]))
+        show_file.info("Please upload a file of type: " + ", ".join(["png", "jpg", "jpeg"]))
         return
  
     #content = file.getvalue()
